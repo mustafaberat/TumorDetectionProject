@@ -6,7 +6,7 @@ architecture, in which an artificial neural network developed for biomedical ima
 images, enables the classification of tumors as necrosis, edema and contrast-enhancing tumors. As a result, a system that reports the MR image and 
 the patient's condition has been developed
 
-<img alt="Overview" src="images/label.png" width="456" height="186" ><br>
+<img alt="Overview" src="presentation/readme_images/label.png" width="456" height="186" ><br>
 <sub><b>Figure 1: </b> Label images of brain tumor segmentation </sub><br>
 
 ## Dataset
@@ -19,7 +19,7 @@ segmentation of the radiologist, label 1 full tumor, label 2 necrosis, label 3 n
 ## Data Preprocess
 Due to the scarcity of MR data, the number of data was increased with the Data Augmentation method. In this study, two separate operations were performed on flair and segment images to segment brain tumors. In segment visuals, all label values are set to the same value. Since there is no tag value in flair images, zero normalization is applied to increase it. The number of samples was increased by applying rotation, horizontal flip and vertical flip to the images. 70 to 130 slices are used for preprocessing. These slices were chosen because the training data is unlikely to have any tumors in the remaining slices of the image. Slices are then normalized to zero mean using the mean and standard deviation. The reproduced data was transformed into an array and the necessary data for training was created. 
 
- <img alt="Overview" src="images/data_augmentation.png" ><br>
+ <img alt="Overview" src="presentation/readme_images/data_augmentation.png" ><br>
  <sub><b>Figure 2: </b> Data augmentation operations </sub><br>
  
 While performing tumor segmentation, T1ce images are used to make the parts of the tumor more prominent. When processing these images, the size of the tumor remains very small compared to the overall x-ray size, so the results are not very healthy when making predictions with the model. Therefore, cropping is applied to the part where the tumor is on these images.
@@ -27,12 +27,12 @@ While performing tumor segmentation, T1ce images are used to make the parts of t
 By reading the segmentation data, it is known in which pixels the tumor is located. In the X and Y coordinates, by adding the highest and lowest number of data and dividing them into two, there is an approximate midpoint in that coordinate. Trimming is carried out by taking a certain distance from the middle point to both coordinates. A new picture is created with the cropped picture.
 Thus, T1C MR images will be given to the model and the model will provide a better learning. Another situation encountered during the modeling phase is that if this tumor data is larger than the 64x64 pixel frame specified earlier, the frame overflows. 
 
-<img alt="Overview" src="images/crop.png"><br>
+<img alt="Overview" src="presentation/readme_images/crop.png"><br>
 <sub><b>Figure 3: </b> Cropped tumors of different types </sub><br>
 
 The dimensions of frame must match with other frames. For this reason, it is necessary to divide the approximated tumors of known size into a series and give them to the model in this way. Thanks to this procedure, the model will also be trained for tumors larger than the frame found in MR images in T1C.
 
-<img alt="Overview" src="images/crop1.jpg"><br>
+<img alt="Overview" src="presentation/readme_images/crop1.jpg"><br>
 <sub><b>Figure 4: </b> Combined view of the four parts of the tumor </sub><br>
 
 
@@ -50,7 +50,7 @@ The proposed 9-layer U-net Structure was used for full tumor segmentation. There
 The model was trained by reading the Flair, T2 and Flair+T2 images to be used for the model. The model
 The model, which can easily detect full tumors, cannot successfully detect enhancing and necrotic tumor types. This is because they are very small relative to the brain image.
 
-<img alt="Overview" src="images/concatenate.png" width="450" height="150"><br>
+<img alt="Overview" src="presentation/readme_images/concatenate.png" width="450" height="150"><br>
 <sub><b>Figure 5: </b> Image of flair, t2 and concatenated forms </sub><br>
 
 For this T1ce images by giving to the model will be provided a better learning. Training continues by gives all these pictures to the model as a series. For the training of the second and third models, the data prepared by applying cropping on the T1ce images will be used. The data divided into two as enhancing and non-edema according to the label 
@@ -59,13 +59,13 @@ The previously trained model can successfully detect tumors on MR images such as
 
 Tumors were predicted separately from each other. These tumors were combined with the superposition method and a result close to the original tumor image of the patient was obtained.
 
-<img alt="Overview" src="images/seg_of_model.jpg" width="580" height="150"><br>
+<img alt="Overview" src="presentation/readme_images/seg_of_model.jpg" width="580" height="150"><br>
 <sub><b>Figure 6: </b> All tumor type predictions of the model </sub><br>
 
 ## Result
 Flair and t2-sequence images are used in education to obtain the full tumor. At the end of the training, the model successfully detected the full tumor. Afterwards, the t1ce sequenced images in the dataset were used to detect the enlarged and non-edematous tumor as it strengthens the features of the tumor border and makes the border clear and easily distinguishable. In the model created here, the detection of enlarged and non-edema tumor was also successfully achieved. Finally, segmentation was performed by superimposing the obtained images, and by testing the model, images similar to the segmentation data given in the training data could be obtained.
 
-<img alt="Overview" src="images/acc_loss_result.png"><br>
+<img alt="Overview" src="presentation/readme_images/acc_loss_result.png"><br>
 <sub><b>Figure 7: </b> With and without augmentation dice coef compare </sub><br>
 <br>
 
@@ -79,12 +79,12 @@ Flair and t2-sequence images are used in education to obtain the full tumor. At 
 
 Shows the model's prediction for full tumor detection. The 9 layers U-Net model was used to obtain the full tumor.
 
-<img alt="Overview" src="images/full_tumor.png" width="470" height="150"><br>
+<img alt="Overview" src="presentation/readme_images/full_tumor.png" width="470" height="150"><br>
 <sub><b>Figure 8: </b> Radiologist full tumor detection and model prediction </sub><br>
 <br>
 
 Shows the model's prediction for tumor segmentation. The 7 layers U-Net model was used to obtain the segmented tumor.
 
-<img alt="Overview" src="images/result.png"><br>
+<img alt="Overview" src="presentation/readme_images/result.png"><br>
 <sub><b>Figure 9: </b> Segmentation of the model and radiologist </sub><br>
 <br>
